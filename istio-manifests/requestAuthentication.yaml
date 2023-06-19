@@ -1,0 +1,11 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: book-info-request-authentication
+spec:
+  selector:
+    matchLabels:
+     app: book-info
+  jwtRules:
+  - issuer: "http://keycloak:8080/realms/Istio"
+    jwksUri: "http://keycloak:8080/realms/Istio/protocol/openid-connect/certs"

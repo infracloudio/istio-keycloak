@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-info
+  labels:
+    app: book-info
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-info
+  template:
+    metadata:
+      labels:
+        app: book-info
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - name: book-info
+          image: shehbazp/app:book-info
+          env:
+            - name: DB_HOST
+              value: "book-info-db"
+            - name: DB_NAME
+              value: "books"
+            - name: DB_USERNAME
+              value: "db-user"
+            - name: DB_PASSWORD
+              value: "KpkZJvaPFyR13y3"
+          ports:
+            - name: http
+              containerPort: 8888
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-info
+spec:
+  selector:
+    app: book-info
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8888

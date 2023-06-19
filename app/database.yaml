@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-info-db
+  labels:
+    app: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - name: db
+          image: shehbazp/db:mysql
+          env:
+           - name: MYSQL_ROOT_PASSWORD
+             value: "R00t@123"
+          ports:
+            - name: db 
+              containerPort: 3306
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-info-db
+spec:
+  selector:
+    app: db
+  type: ClusterIP
+  ports:
+    - name: db
+      port: 3306
+      targetPort: 3306
